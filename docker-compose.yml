@@ -1,0 +1,5 @@
+services:
+  rest-api:
+    image: pineapple217/kopwerk-demo
+    ports:
+      - 4000:4000
