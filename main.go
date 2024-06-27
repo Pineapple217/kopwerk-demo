@@ -4,15 +4,16 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
 	echoMw "github.com/labstack/echo/v4/middleware"
 	"github.com/xitongsys/parquet-go-source/buffer"
 	"github.com/xitongsys/parquet-go/reader"
-)
 
-const URL = "https://kopwerk.blob.core.windows.net/assignment/albums.parquet"
+	_ "github.com/joho/godotenv/autoload"
+)
 
 var albums = make(map[int64]Album)
 
@@ -36,8 +37,11 @@ func main() {
 
 		},
 	}))
-
-	LoadParquet(URL)
+	url := os.Getenv("PARQUIT_URL")
+	if url == "" {
+		panic("PARQUIT_URL env not set")
+	}
+	LoadParquet(url)
 
 	e.GET("/health", HandleHealth)
 	e.GET("/album/:id", HandleGetAlbum)

@@ -1,5 +1,7 @@
 services:
   rest-api:
     image: pineapple217/kopwerk-demo
+    environment:
+      - PARQUIT_URL=https://kopwerk.blob.core.windows.net/assignment/albums.parquet
     ports:
       - 4000:4000
