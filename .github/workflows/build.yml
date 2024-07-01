@@ -18,6 +18,5 @@ jobs:
       - name: Build and push docker
         uses: docker/build-push-action@v4
         with:
-          file: /Dockerfile
           push: true
           tags: pineapple217/kopwerk-demo:latest
