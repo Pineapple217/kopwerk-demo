@@ -12,10 +12,27 @@ import (
 	"github.com/xitongsys/parquet-go-source/buffer"
 	"github.com/xitongsys/parquet-go/reader"
 
+	_ "github.com/Pineapple217/kopwerk-demo/docs"
 	_ "github.com/joho/godotenv/autoload"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 var albums = make(map[int64]Album)
+
+//	@title			Kopwerk Demo
+//	@version		1.0
+//	@description	Small demo appliction serving albums
+//	@termsOfService	http://swagger.io/terms/
+
+//	@contact.name	API Support
+//	@contact.url	http://www.swagger.io/support
+//	@contact.email	support@swagger.io
+
+//	@license.name	Apache 2.0
+//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
+
+//	@host		temp.swagger.io
+//	@BasePath	/
 
 func main() {
 	e := echo.New()
@@ -42,6 +59,8 @@ func main() {
 		panic("PARQUIT_URL env not set")
 	}
 	LoadParquet(url)
+
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	e.GET("/health", HandleHealth)
 	e.GET("/album/:id", HandleGetAlbum)
@@ -98,12 +117,22 @@ type Health struct {
 	Status string `json:"status"`
 }
 
+//	@Summary		Check the health of the server
+//	@Description	get healthcheck
+//	@ID				health
+//	@Produce		json
+//	@Router			/health [get]
 func HandleHealth(c echo.Context) error {
 	return c.JSON(http.StatusOK, Health{
 		Status: "OK!",
 	})
 }
 
+//	@Description	get a album by its id
+//	@ID				get album by id
+//	@Produce		json
+//	@Param			id	path	int	true	"Album ID"
+//	@Router			/album/{id} [get]
 func HandleGetAlbum(c echo.Context) error {
 	idStr := c.Param("id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
@@ -117,6 +146,10 @@ func HandleGetAlbum(c echo.Context) error {
 	return c.JSON(http.StatusOK, a)
 }
 
+//	@Description	get all albums
+//	@ID				get albums
+//	@Produce		json
+//	@Router			/albums [get]
 func HandleGetAlbums(c echo.Context) error {
 	return c.JSON(http.StatusOK, albums)
 }

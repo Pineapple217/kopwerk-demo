@@ -1,4 +1,6 @@
 docker-build:
+	swag fmt
+	swag init
 	docker build . -t  pineapple217/kopwerk-demo:latest
 
 docker-push:
