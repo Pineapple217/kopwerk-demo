@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	echoMw "github.com/labstack/echo/v4/middleware"
@@ -117,22 +118,22 @@ type Health struct {
 	Status string `json:"status"`
 }
 
-//	@Summary		Check the health of the server
-//	@Description	get healthcheck
-//	@ID				health
-//	@Produce		json
-//	@Router			/health [get]
+// @Summary		Check the health of the server
+// @Description	get healthcheck
+// @ID				health
+// @Produce		json
+// @Router			/health [get]
 func HandleHealth(c echo.Context) error {
 	return c.JSON(http.StatusOK, Health{
 		Status: "OK!",
 	})
 }
 
-//	@Description	get a album by its id
-//	@ID				get album by id
-//	@Produce		json
-//	@Param			id	path	int	true	"Album ID"
-//	@Router			/album/{id} [get]
+// @Description	get a album by its id
+// @ID				get album by id
+// @Produce		json
+// @Param			id	path	int	true	"Album ID"
+// @Router			/album/{id} [get]
 func HandleGetAlbum(c echo.Context) error {
 	idStr := c.Param("id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
@@ -146,10 +147,23 @@ func HandleGetAlbum(c echo.Context) error {
 	return c.JSON(http.StatusOK, a)
 }
 
-//	@Description	get all albums
-//	@ID				get albums
-//	@Produce		json
-//	@Router			/albums [get]
+// @Description	get all albums
+// @ID				get albums
+// @Produce		json
+// @Param			name	query	string	false	"Album name"
+// @Router			/albums [get]
 func HandleGetAlbums(c echo.Context) error {
-	return c.JSON(http.StatusOK, albums)
+	name := c.QueryParam("name")
+	if name == "" {
+		return c.JSON(http.StatusOK, albums)
+	}
+	r := []Album{}
+	name = strings.ToLower(name)
+	for _, a := range albums {
+		if strings.HasPrefix(
+			strings.ToLower(a.Album), name) {
+			r = append(r, a)
+		}
+	}
+	return c.JSON(http.StatusOK, r)
 }

@@ -30,6 +30,11 @@ paths:
     get:
       description: get all albums
       operationId: get albums
+      parameters:
+      - description: Album name
+        in: query
+        name: name
+        type: string
       produces:
       - application/json
       responses: {}

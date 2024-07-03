@@ -50,6 +50,14 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "operationId": "get albums",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Album name",
+                        "name": "name",
+                        "in": "query"
+                    }
+                ],
                 "responses": {}
             }
         },
